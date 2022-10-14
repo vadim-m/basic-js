@@ -13,8 +13,8 @@ const { NotImplementedError } = require("../extensions/index.js");
  */
 function sortByHeight(arr) {
   const arrWithoutUnit = arr
-    .filter((item) => item > 0)
-    .sort(function compareNumbers(a, b) {
+    .filter((item) => item !== -1)
+    .sort((a, b) => {
       return a - b;
     });
 
@@ -30,6 +30,7 @@ function sortByHeight(arr) {
 
   return relustArr;
 }
+
 module.exports = {
   sortByHeight,
 };
