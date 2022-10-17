@@ -17,6 +17,10 @@ function getSeason(d) {
     return "Unable to determine the time of year!";
   }
 
+  if (!(d instanceof Date) || Object.getOwnPropertyNames(d).length) {
+    throw new Error("Invalid date!");
+  }
+
   if (Object.prototype.toString.call(d) === "[object Date]") {
     if (isNaN(d)) {
       throw new Error("Invalid date!");
@@ -33,8 +37,6 @@ function getSeason(d) {
         return "autumn";
       }
     }
-  } else {
-    throw new Error("Invalid date!");
   }
 }
 
