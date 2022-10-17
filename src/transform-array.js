@@ -13,9 +13,9 @@ const { NotImplementedError } = require("../extensions/index.js");
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  *
  */
-function transform(arr) {
+function transform(array) {
   const doubleNext = function (arr, i) {
-    if (arr[i + 1] && typeof arr[i + 2] !== "string") {
+    if (arr[i + 1]) {
       resultArr.push(arr[i + 1]);
     }
   };
@@ -25,39 +25,44 @@ function transform(arr) {
     }
   };
   const discardNext = function (arr, i) {
-    if (arr[i + 1]) {
+    if (arr[i + 1] && typeof arr[i + 2] === "string") {
+      arr.splice(i, 2);
+    } else if (arr[i + 1]) {
       arr.splice(i, 1);
     }
   };
   const discardPrev = function (arr, i) {
-    arr.pop();
+    if (arr[i - 1] !== "string") {
+      arr.pop();
+    }
   };
 
-  if (!Array.isArray(arr))
+  if (!Array.isArray(array))
     throw new Error("'arr' parameter must be an instance of the Array!");
 
+  const copyArr = [...array];
   const resultArr = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (typeof arr[i] === "string") {
-      switch (arr[i]) {
+  for (let i = 0; i < copyArr.length; i++) {
+    if (typeof copyArr[i] === "string") {
+      switch (copyArr[i]) {
         case "--double-next":
-          doubleNext(arr, i);
+          doubleNext(copyArr, i);
           break;
         case "--double-prev":
-          doublePrev(arr, i);
+          doublePrev(copyArr, i);
           break;
         case "--discard-next":
-          discardNext(arr, i);
+          discardNext(copyArr, i);
           break;
         case "--discard-prev":
           discardPrev(resultArr, i);
           break;
         default:
-          resultArr.push(arr[i]);
+          resultArr.push(copyArr[i]);
           break;
       }
     } else {
-      resultArr.push(arr[i]);
+      resultArr.push(copyArr[i]);
     }
   }
 
